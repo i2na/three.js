@@ -34,9 +34,17 @@ import {
  * - 렌더 루프(renderFrame) 호출
  */
 async function main() {
+  // WebGPU 지원 확인
+  if (!navigator.gpu) {
+    throw new Error("WebGPU is not supported in this browser");
+  }
+
   // 캔버스 & WebGPU 기본 설정
   const canvas = document.getElementById("webgpu-canvas");
   const adapter = await navigator.gpu.requestAdapter();
+  if (!adapter) {
+    throw new Error("No GPU adapter found");
+  }
   const device = await adapter.requestDevice();
   const context = canvas.getContext("webgpu");
   const preferredFormat = navigator.gpu.getPreferredCanvasFormat();
@@ -710,4 +718,12 @@ async function main() {
 }
 
 // 실제로 main() 호출
-main();
+main().catch((error) => {
+  console.error("Failed to initialize:", error);
+  const loadingElement = document.getElementById("loading");
+  const loadingText = document.getElementById("loading-text");
+  if (loadingElement && loadingText) {
+    loadingText.textContent = "Failed to load. Your browser may not support WebGPU.";
+    loadingText.style.color = "#ff5555";
+  }
+});
