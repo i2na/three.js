@@ -619,6 +619,12 @@ async function main() {
     requestAnimationFrame(renderFrame);
   }
 
+  // 로딩 완료 - 로딩 화면 숨김
+  const loadingElement = document.getElementById("loading");
+  if (loadingElement) {
+    loadingElement.classList.add("hidden");
+  }
+
   // 초기 렌더 시작
   requestAnimationFrame(renderFrame);
 
